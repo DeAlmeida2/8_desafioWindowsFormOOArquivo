@@ -19,7 +19,9 @@ namespace _8_desafioWindowsFormOOArquivo
 
         private void button1_Click(object sender, EventArgs e)
         {
-            
+            Cadastro novoCadastro = new Cadastro();
+            novoCadastro.ShowDialog();
+
         }
 
         private void Form1_Load(object sender, EventArgs e)
