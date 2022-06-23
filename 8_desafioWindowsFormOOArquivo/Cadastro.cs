@@ -11,36 +11,67 @@ using System.Windows.Forms;
 namespace _8_desafioWindowsFormOOArquivo
 {
     public partial class Cadastro : Form
+
     {
+         //Lista de veiculos estacionados na garagem
+        List<Veiculo> estacionados = new List<Veiculo>();
+
+        List<Veiculo> naoestacionados = new List<Veiculo>();
         public Cadastro()
+                {//local do arquivo
+            Persistencia P = new Persistencia(@"C:\Users\Andre\OneDrive\Documentos\Aula .NET\Form\8_desafioWindowsFormOOArquivo\8_desafioWindowsFormOOArquivo\teste.txt");
+
+            estacionados = P.lerArquivoEntrada().Where(x => x.Estacionado == "s").ToList();
+            naoestacionados = P.lerArquivoEntrada().Where(x => x.Estacionado == "n").ToList();
+
+            InitializeComponent();
+
+            dataGrid_veiculosEstacionados.Columns.Add("placa", "placa");
+            dataGrid_veiculosEstacionados.Columns.Add("Data Entrada", "Data Entrada");
+            dataGrid_veiculosEstacionados.Columns.Add("Hora Entrada", "Hora Entrada");
+            dataGrid_veiculosSaida.Columns.Add("placa", "placa");
+            dataGrid_veiculosSaida.Columns.Add("Data Saída", "Data Saída");
+            dataGrid_veiculosSaida.Columns.Add("Hora Saída", "Hora Saída");
+
+
+            foreach (Veiculo i in P.lerArquivoEntrada()) //Onde o sistema faz a leitura das informações do arquivo;
+            {
+                if (i.Estacionado == "s")
+
+                    dataGrid_veiculosEstacionados.Rows.Add(i.Placa, i.DataEntrada.ToString("dd/MM/yyyy"), i.HoraEntrada.TimeOfDay);
+                else
+                    dataGrid_veiculosSaida.Rows.Add(i.Placa, i.DataSaida.ToString("dd/MM/yyyy"), i.HoraSaida.TimeOfDay);
+            }
+           
+
+        }
+
+        private void populardatagrid() //Onde o sistema populariza o arquivo com as informações;
         {
             Persistencia P = new Persistencia(@"C:\Users\Andre\OneDrive\Documentos\Aula .NET\Form\8_desafioWindowsFormOOArquivo\8_desafioWindowsFormOOArquivo\teste.txt");
-            
-             InitializeComponent();
-
-            dataGrid_veiculosEstacionados.Columns.Add("placa","placa");
-            dataGrid_veiculosEstacionados.Columns.Add("Hora Entrada", "Hora Entrada");
-            dataGrid_veiculosEstacionados.Columns.Add("Data Entrada", "Data Entrada");
 
             foreach (Veiculo i in P.lerArquivoEntrada())
             {
-                dataGrid_veiculosEstacionados.Rows.Add(i.Placa,i.HoraEntrada,i.HoraSaida);
+                if (i.Estacionado == "s")
 
+                    dataGrid_veiculosEstacionados.Rows.Add(i.Placa, i.DataEntrada.ToString("dd/MM/yyyy"), i.HoraEntrada.TimeOfDay);
+                else
+                    dataGrid_veiculosSaida.Rows.Add(i.Placa, i.DataSaida.ToString("dd/MM/yyyy"), i.HoraSaida.TimeOfDay);
             }
-
         }
-        //Lista de veiculos estacionados na garagem
-        List<Veiculo> estacionados = new List<Veiculo>();
 
-        //Lista de veículo que sairam do estacionamento
+        private void limpardatagrid() //Onde o sistema limpa o arquivo para não trazer placas duplicadas;
+        {
+            dataGrid_veiculosEstacionados.Rows.Clear();
+            dataGrid_veiculosSaida.Rows.Clear();
+        }
+
+
+        //A lista de veículo que sairam do estacionamento
         List<Veiculo> historico = new List<Veiculo>();
         double precoHora = 5;
 
-        /// Registro de carros no estacionamento. Não é possível registrar duas placas iguais. Limite de 50 carros.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-
+        
         private void button_menu_Click(object sender, EventArgs e)
         {
             Menu mainMenu = new Menu();
@@ -49,42 +80,21 @@ namespace _8_desafioWindowsFormOOArquivo
 
         }
 
-        private void button_cadEntrada_Click(object sender, EventArgs e)
-        {
-            //CadastarEntrada cadastarEntrada = new CadastarEntrada();
-            //cadastarEntrada.Show(this);
-        }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBox_cadPlaca_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void button_consultar_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void button_CadastrarEntrada_Click(object sender, EventArgs e)
         {
 
-            bool jaEstacionado = false;
+            bool jaEstacionado = false; //Onde temos quesitos de segurança, como digitar =7 caracteres, limite de vagas e placa já cadastrada;
             if (estacionados.Count() >= 50)
             {
                 MessageBox.Show("Não há vagas, favor aguardar a retirada de um´Veículo");
             }
-            else if (textBox_cadPlaca.Text.Count() < 7)
+            else if (textBox_cadPlaca.Text.Count() != 7)
             {
                 MessageBox.Show("Digite uma placa válida");
             }
             else
             {
-                if (estacionados.Any(x => x.Placa == textBox_cadPlaca.Text))
+                if (estacionados.Any(x => x.Placa == textBox_cadPlaca.Text&&x.Estacionado=="s"))
                 {
                     MessageBox.Show("Placa já cadastrada, favor retirar o carro da garagem");
                     jaEstacionado = true;
@@ -94,58 +104,65 @@ namespace _8_desafioWindowsFormOOArquivo
 
                 if (!jaEstacionado)
                 {
-                    //Adiciona um novo veículo na lista de vagas disponíveis
+                    //Onde adiciona um novo veículo na lista de vagas disponíveis
                     Veiculo v = new Veiculo(textBox_cadPlaca.Text);
 
-                    dataGrid_veiculosEstacionados.Rows.Add(v.Placa, v.DataEntrada, v.DataEntrada);
+                    dataGrid_veiculosEstacionados.Rows.Add(v.Placa, v.DataEntrada, v.HoraEntrada);
                     estacionados.Add(v);
-                    //verifica se a quantidade máxima de vagas foi atingida
-                    MessageBox.Show($"{estacionados.Count()} veiculos estão na garagem, ainda restam {50 - estacionados.Count()} vagas");
+
+                    Persistencia persistencia = new Persistencia(@"C:\Users\Andre\OneDrive\Documentos\Aula .NET\Form\8_desafioWindowsFormOOArquivo\8_desafioWindowsFormOOArquivo\teste.txt");
+                    persistencia.gravarNoArquivoEntrada(v);
+
+
+                    //Onde é verificado se a quantidade máxima de vagas foi atingida
+                    MessageBox.Show($"{estacionados.Where(x=> x.Estacionado=="s").Count()} veiculos estão na garagem, ainda restam {50 - estacionados.Where(x => x.Estacionado == "s").Count()} vagas");
+
                 }
 
 
             }
 
-
-
-
-
         }
-    }
-}
-/// <summary>
-/// Registra a saída de um veículo da garagem e informa o preço a ser pago
-/// </summary>
-/// <param name="sender"></param>
-/// <param name="e"></param>
 
-/*private void button_cadSaida_Click(object sender, EventArgs e)
-{
-    //Registrar a saida de um veículo da vaga e informar o preço pago no total
-    DataGridViewRow linhaSelecionada = dataGrid_veiculosEstacionados.CurrentRow;
-    int indice = linhaSelecionada.Index;
-    string placa = (string)dataGrid_veiculosEstacionados.Rows[indice].Cells[1].Value;
-    int indexVeiculo;
-    //adiciona o veículo na lista de registro diário
-    foreach (Veiculo i in estacionados)
-    {
-        if (i.Placa.Equals(placa))
+        private void button_cadSaida_Click(object sender, EventArgs e)
         {
-            indexVeiculo = estacionados.IndexOf(i);
-            historico.Add(i);
-            i.HoraSaida = DateTime.Now;
-            i.Permanencia = i.HoraSaida.Subtract(i.DataEntrada);
-            i.Valorpago = Math.Ceiling((i.Permanencia.TotalMinutes / 60)) * precoHora;
-            MessageBox.Show($"O valor a ser cobrado é {i.Valorpago} reais, equivalente a {Math.Ceiling(i.Permanencia.TotalHours)} hora(s)");
-            break;
+            
+            {
+                //Registrar a saida de um veículo da vaga;
+                DataGridViewRow linhaSelecionada = dataGrid_veiculosEstacionados.CurrentRow;
+                int indice = linhaSelecionada.Index;
+                string placa = (string)dataGrid_veiculosEstacionados.Rows[indice].Cells[0].Value;
+
+                Veiculo veiculo = estacionados.FirstOrDefault(x => x.Placa == placa && x.Estacionado == "s");
+                veiculo.DataSaida=DateTime.Now;
+                veiculo.HoraSaida = DateTime.Now;
+                veiculo.realizarCobranca(precoHora);
+
+
+
+                Persistencia persistencia = new Persistencia(@"C:\Users\Andre\OneDrive\Documentos\Aula .NET\Form\8_desafioWindowsFormOOArquivo\8_desafioWindowsFormOOArquivo\teste.txt");
+                persistencia.alterarStatus(veiculo);
+
+                estacionados.Remove(estacionados.FirstOrDefault(x => x.Placa == placa));
+                
+                //após limpar as informações do datagrid, será populaziado novamente com os dados atualizados;
+                limpardatagrid();
+
+                populardatagrid();
+
+                MessageBox.Show("O veículo ficou estacionado por : " + veiculo.TempoPermanencia + " minutos. \n O valor do serviço de estacionamento ficou de :  " + veiculo.ValorCobrado.ToString("c"));
+                     //informar o tempo de permanência e o valor dos serviços prestados;                        
+               
+                }
+            }
         }
-
-
     }
 
 
-}
-}
-*/
+       
+    
+
+
+
 
 

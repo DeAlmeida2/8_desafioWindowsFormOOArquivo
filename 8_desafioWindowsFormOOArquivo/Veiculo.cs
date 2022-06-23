@@ -15,19 +15,29 @@ namespace _8_desafioWindowsFormOOArquivo
         DateTime horaSaida;
         int tempoPermanencia;
         Double valorCobrado;
+        string estacionado;
 
-        
 
-        public Veiculo(string placa, DateTime dataEntrada, DateTime horaEntrada)
+
+        public Veiculo(string estacionados, string placa, DateTime dataEntrada, DateTime horaEntrada)
         {
+            this.estacionado = estacionados;
             this.Placa = placa;
             this.DataEntrada = dataEntrada;
             this.HoraEntrada = horaEntrada;
+
 
         }
         public Veiculo(string placa)
         {
             this.Placa = placa;
+            estacionado = "s";
+            DataEntrada = DateTime.Now;
+            HoraEntrada = DateTime.Now;
+            DataSaida = DateTime.Now;
+            HoraSaida = DateTime.Now;
+            tempoPermanencia = 0;
+            valorCobrado = 0;
         }
         //O construtor é usado na leitura de saída dos veículos que já entraram
 
@@ -38,8 +48,8 @@ namespace _8_desafioWindowsFormOOArquivo
         /// <param name="horaSaida"></param>
         /// <param name="tempoPermanecia">tempo em minutos</param>
         /// <param name="valorCobrado"></param>
-        public Veiculo (string placa, DateTime dataEntrada, DateTime horaEntrada,
-            DateTime dataSaida, DateTime horaSaida, int tempoPermanecia, double valorCobrado) : this(placa, dataEntrada, horaEntrada)
+        public Veiculo(string estacionados, string placa, DateTime dataEntrada, DateTime horaEntrada,
+            DateTime dataSaida, DateTime horaSaida, int tempoPermanecia, double valorCobrado) : this(estacionados, placa, dataEntrada, horaEntrada)
         {
             this.dataSaida = dataSaida;
             this.horaSaida = horaSaida;
@@ -47,7 +57,7 @@ namespace _8_desafioWindowsFormOOArquivo
             this.valorCobrado = valorCobrado;
         }
 
-               public void gerarDataHora(string tipo)
+        public void gerarDataHora(string tipo) //Gerar a data e hora e jogar no dataGrid;
         {
             DateTime dateTime = DateTime.Now;
             DateTime[] vetorDados = new DateTime[2];
@@ -71,12 +81,9 @@ namespace _8_desafioWindowsFormOOArquivo
         /// <param name="valorHora">valor de referencia da hora</param>
         public void realizarCobranca(double valorHora)
         {
-            //horaEntrada = "8:14"; -> 8*60+14 = 494
-            //horaSaida = "10:15";  -> 10*60+15 = 615
-            //descobrindo o tempo em minutos da entrada
-            int entrada = horaEntrada.Hour*60+horaEntrada.Minute;
+            int entrada = horaEntrada.Hour * 60 + horaEntrada.Minute; //Onde transformamos o tempo em minutos;
 
-            //descobrindo o tempo em minutos da saida
+
             int saida = horaSaida.Hour * 60 + horaSaida.Minute;
 
             this.TempoPermanencia = saida - entrada;
@@ -92,35 +99,10 @@ namespace _8_desafioWindowsFormOOArquivo
         public DateTime HoraSaida { get => horaSaida; set => horaSaida = value; }
         public int TempoPermanencia { get => tempoPermanencia; set => tempoPermanencia = value; }
         public double ValorCobrado { get => valorCobrado; set => valorCobrado = value; }
+        public string Estacionado { get => estacionado; set => estacionado = value; }
+     
 
-        /// <summary>
-        /// metodo que procura um veiculo na lista a partir de sua placa
-        /// </summary>
-        /// <param name="placa">identificação do veículo</param>
-        /// <param name="lista">lista de veículos ou de entrada ou de saída</param>
-        /// <returns>a posição em que o veículo se encontra na lista, caso contrário, -27</returns>
-        public static int localizado(string placa, List<Veiculo> lista)
-        {
-            foreach (Veiculo i in lista)
-            {
-                if (i.Placa.Equals(placa))
-                {
-                    return lista.IndexOf(i);
-                }
-            }
-            return -27; //codigo do ESC, ou seja, veiculo nao localizado
-        }
-        /// <summary>
-        /// metodo que descobre se há espaço ou não na garagem, ou lista de controle da garagem
-        /// </summary>
-        /// <param name="lista">lista de veículos</param>
-        /// <param name="tamanhoGaragem">quantidade de vagas na garagem</param>
-        /// <returns></returns>
-        public static bool temLugar(List<Veiculo> lista, int tamanhoGaragem)
-        {
-            return lista.Count < tamanhoGaragem;
-
-        }
-
+    }
 }
-}
+
+

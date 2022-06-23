@@ -15,20 +15,41 @@ namespace _8_desafioWindowsFormOOArquivo
             this.caminho = caminho;
         }
 
-        public static void gravarNoArquivoEntrada(List<Veiculo> lista)
+        public void gravarNoArquivoEntrada(Veiculo v) //gravar os veículos no arquivo;
         {
-            StreamWriter escritor = new StreamWriter("veiculosEntrada.dat", true);
 
-            foreach (Veiculo i in lista)
+            using (StreamWriter escritor = File.AppendText(caminho))
             {
-                escritor.WriteLine(i.Placa + ";" + i.DataEntrada + ";" + i.HoraEntrada);
-                escritor.Flush();
+                string linha = v.Estacionado + ";" + v.Placa + ";" + v.DataEntrada + ";" + v.HoraEntrada + ";" + v.DataSaida +";" + v.HoraSaida + ";" + v.TempoPermanencia + ";" + v.ValorCobrado;
+                escritor.WriteLine(linha);
             }
-            escritor.Close();
+
         }
-        public static void gravarNoArquivoSaida(List<Veiculo> lista)
+          
+        public void alterarStatus (Veiculo veiculo) //Pegar a linha e alterar de "s" para "n" os veículos estacionados;
         {
-            StreamWriter escritor = new StreamWriter("veiculosSaida.dat");
+
+            string[] linhas=File.ReadAllLines(caminho);
+
+            string[] vetorDados = new string[8];
+            for (int i = 0; i < linhas.Length; i++)
+            {
+                vetorDados = linhas[i].Split(';');
+                string estacionado = vetorDados[0];
+
+                if (vetorDados[1] == veiculo.Placa && estacionado == "s")
+                {
+                   linhas[i] = $"n;{vetorDados[1]};{vetorDados[2]};{vetorDados[3]};{veiculo.DataSaida};{veiculo.HoraSaida}; {veiculo.TempoPermanencia};{veiculo.ValorCobrado}";
+
+                }
+            }
+            File.WriteAllLines(caminho, linhas);
+        
+        }
+            
+            public static void gravarNoArquivoSaida(List<Veiculo> lista) //Gravar no arquivo;
+        {
+            StreamWriter escritor = new StreamWriter("teste");
 
             foreach (Veiculo i in lista)
             {
@@ -38,10 +59,10 @@ namespace _8_desafioWindowsFormOOArquivo
             escritor.Close();
         }
 
-        public List<Veiculo> lerArquivoEntrada ()
+        public List<Veiculo> lerArquivoEntrada () //Ler no arquivo de entrada;
         {
             string linha;
-            string[] vetorDados = new string[3];
+            string[] vetorDados = new string[8];
             List<Veiculo> list = new List<Veiculo>();
             using (StreamReader sr = File.OpenText(caminho))
             {//verificando as linhas do dat
@@ -51,10 +72,11 @@ namespace _8_desafioWindowsFormOOArquivo
                 {
 
                     vetorDados = linha.Split(';');
-                    DateTime horainicio = Convert.ToDateTime(vetorDados[1]);
-                    DateTime horafim = Convert.ToDateTime(vetorDados[2]);
-                    Veiculo veiculo = new Veiculo(vetorDados[0], horainicio, horafim); 
-
+                    DateTime horainicio = Convert.ToDateTime(vetorDados[2]);
+                    DateTime horafim = Convert.ToDateTime(vetorDados[3]);
+                    string estacionado = vetorDados[0];
+                    Veiculo veiculo = new Veiculo(estacionado, vetorDados[1], horainicio, horafim, Convert.ToDateTime(vetorDados[4]), Convert.ToDateTime(vetorDados[5]),int.Parse(vetorDados[6]), double.Parse(vetorDados[7])); 
+                    
                     list.Add(veiculo);
 
                 }
@@ -64,27 +86,9 @@ namespace _8_desafioWindowsFormOOArquivo
 
             
         }
-        /// <summary>
-        /// método que popula a lista de veículos de passaram pela garagem a partir do arquivo base
-        /// </summary>
-        /// <param name="lista">lista veículos</param>
-        public void lerArquivoSaida(List<Veiculo> lista)
-        {
-            StreamReader leitor = new StreamReader("veiculosSaida.dat");
-            string linha;
-            string[] vetorDados;
-
-            do
-            {
-                linha = leitor.ReadLine();
-                vetorDados = linha.Split(';');
-                lista.Add(new Veiculo(vetorDados[0], Convert.ToDateTime(vetorDados[1]), Convert.ToDateTime(vetorDados[2]), Convert.ToDateTime(vetorDados[3]),
-                    Convert.ToDateTime(vetorDados[4]), int.Parse(vetorDados[5]), double.Parse(vetorDados[6])));
-            } while (!leitor.EndOfStream);
-            leitor.Close();
-
-        }
+       
     }
 }
+
 
     

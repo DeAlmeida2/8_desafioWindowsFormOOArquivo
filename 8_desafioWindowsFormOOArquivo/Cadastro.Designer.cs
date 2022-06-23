@@ -34,12 +34,14 @@
             this.button_CadastrarEntrada = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.textBox_cadPlaca = new System.Windows.Forms.TextBox();
-            this.textBox_veiculosEstacionados = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.dataGrid_veiculosEstacionados = new System.Windows.Forms.DataGridView();
+            this.dataGrid_veiculosSaida = new System.Windows.Forms.DataGridView();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGrid_veiculosEstacionados)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGrid_veiculosSaida)).BeginInit();
             this.SuspendLayout();
             // 
             // button_menu
@@ -63,12 +65,13 @@
             this.button_cadSaida.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button_cadSaida.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button_cadSaida.ForeColor = System.Drawing.Color.White;
-            this.button_cadSaida.Location = new System.Drawing.Point(270, 276);
+            this.button_cadSaida.Location = new System.Drawing.Point(307, 273);
             this.button_cadSaida.Name = "button_cadSaida";
             this.button_cadSaida.Size = new System.Drawing.Size(97, 54);
             this.button_cadSaida.TabIndex = 2;
             this.button_cadSaida.Text = "Cadastrar Saída";
             this.button_cadSaida.UseVisualStyleBackColor = false;
+            this.button_cadSaida.Click += new System.EventHandler(this.button_cadSaida_Click);
             // 
             // button_CadastrarEntrada
             // 
@@ -104,22 +107,6 @@
             this.textBox_cadPlaca.Size = new System.Drawing.Size(138, 20);
             this.textBox_cadPlaca.TabIndex = 14;
             // 
-            // textBox_veiculosEstacionados
-            // 
-            this.textBox_veiculosEstacionados.Location = new System.Drawing.Point(208, 46);
-            this.textBox_veiculosEstacionados.Multiline = true;
-            this.textBox_veiculosEstacionados.Name = "textBox_veiculosEstacionados";
-            this.textBox_veiculosEstacionados.Size = new System.Drawing.Size(240, 221);
-            this.textBox_veiculosEstacionados.TabIndex = 18;
-            // 
-            // textBox2
-            // 
-            this.textBox2.Location = new System.Drawing.Point(464, 46);
-            this.textBox2.Multiline = true;
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(240, 221);
-            this.textBox2.TabIndex = 19;
-            // 
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.SlateGray;
@@ -135,10 +122,42 @@
             // dataGrid_veiculosEstacionados
             // 
             this.dataGrid_veiculosEstacionados.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGrid_veiculosEstacionados.Location = new System.Drawing.Point(464, 46);
+            this.dataGrid_veiculosEstacionados.Location = new System.Drawing.Point(190, 46);
             this.dataGrid_veiculosEstacionados.Name = "dataGrid_veiculosEstacionados";
-            this.dataGrid_veiculosEstacionados.Size = new System.Drawing.Size(240, 221);
+            this.dataGrid_veiculosEstacionados.Size = new System.Drawing.Size(366, 221);
             this.dataGrid_veiculosEstacionados.TabIndex = 21;
+            // 
+            // dataGrid_veiculosSaida
+            // 
+            this.dataGrid_veiculosSaida.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGrid_veiculosSaida.Location = new System.Drawing.Point(581, 46);
+            this.dataGrid_veiculosSaida.Name = "dataGrid_veiculosSaida";
+            this.dataGrid_veiculosSaida.Size = new System.Drawing.Size(366, 221);
+            this.dataGrid_veiculosSaida.TabIndex = 22;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.BackColor = System.Drawing.Color.DodgerBlue;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.ForeColor = System.Drawing.Color.White;
+            this.label2.Location = new System.Drawing.Point(725, 23);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(71, 20);
+            this.label2.TabIndex = 23;
+            this.label2.Text = "Histórico";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.BackColor = System.Drawing.Color.DodgerBlue;
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.ForeColor = System.Drawing.Color.White;
+            this.label3.Location = new System.Drawing.Point(278, 19);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(170, 20);
+            this.label3.TabIndex = 24;
+            this.label3.Text = "Veículos Estacionados";
             // 
             // Cadastro
             // 
@@ -146,11 +165,12 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.BackgroundImage = global::_8_desafioWindowsFormOOArquivo.Properties.Resources._2;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(959, 450);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.dataGrid_veiculosSaida);
             this.Controls.Add(this.dataGrid_veiculosEstacionados);
             this.Controls.Add(this.panel1);
-            this.Controls.Add(this.textBox2);
-            this.Controls.Add(this.textBox_veiculosEstacionados);
             this.Controls.Add(this.button_cadSaida);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Cadastro";
@@ -158,6 +178,7 @@
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGrid_veiculosEstacionados)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGrid_veiculosSaida)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -170,9 +191,10 @@
         private System.Windows.Forms.Button button_CadastrarEntrada;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox textBox_cadPlaca;
-        private System.Windows.Forms.TextBox textBox_veiculosEstacionados;
-        private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.DataGridView dataGrid_veiculosEstacionados;
+        private System.Windows.Forms.DataGridView dataGrid_veiculosSaida;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
     }
 }
